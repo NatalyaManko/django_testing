@@ -1,6 +1,7 @@
 # conftest.py
 from datetime import datetime as dt
 from datetime import timedelta
+from django.urls import reverse
 
 import pytest
 from django.conf import settings
@@ -58,16 +59,13 @@ def comment(news, author):
 @pytest.fixture
 def many_comment(news, author):
     today = timezone.now()
-    all_comment = [
-        Comment(
+    for index in range(2):
+        Comment.objects.create(
             news=news,
             text=f'Просто текст. {index}',
-            author=author,
-            created=today - timedelta(days=index)
+            author=author
         )
-        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
-    ]
-    Comment.objects.bulk_create(all_comment)
+        Comment.created = today + timedelta(days=index)
 
 
 @pytest.fixture
@@ -75,7 +73,26 @@ def pk_for_args_comment(comment):
     return comment.pk,
 
 
-# Добавляем фикстуру form_data
+@pytest.fixture
+def pk_for_args_news(news):
+    return news.pk,
+
+
+@pytest.fixture
+def detail_url(pk_for_args_news):
+    return reverse('news:detail', args=(pk_for_args_news))
+
+
+@pytest.fixture
+def edit_url(pk_for_args_comment):
+    return reverse('news:edit', args=(pk_for_args_comment))
+
+
+@pytest.fixture
+def delete_url(pk_for_args_comment):
+    return reverse('news:delete', args=(pk_for_args_comment))
+
+
 @pytest.fixture
 def form_data():
     return {

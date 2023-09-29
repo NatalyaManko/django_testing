@@ -8,7 +8,7 @@ from django.urls import reverse
     'name',
     ('news:home',),
 )
-def test_news_count(client, name, many_news):
+def test_news_count(name, client, many_news):
     url = reverse(name)
     response = client.get(url)
     object_list = response.context['object_list']
@@ -21,7 +21,7 @@ def test_news_count(client, name, many_news):
     'name',
     ('news:home',),
 )
-def test_news_order(client, name, many_news):
+def test_news_order(name, client, many_news):
     url = reverse(name)
     response = client.get(url)
     object_list = response.context['object_list']
@@ -35,7 +35,7 @@ def test_news_order(client, name, many_news):
     'name',
     ('news:detail',),
 )
-def test_comments_order(client, name, news, many_comment):
+def test_comments_order(name, client, news, many_comment):
     url = reverse(name, args=(news.id,))
     response = client.get(url)
     object_list = response.context['news'].comment_set.all()
@@ -51,7 +51,7 @@ def test_comments_order(client, name, news, many_comment):
         ('news:detail'),
     )
 )
-def test_anonymous_client_has_no_form(client, name, news):
+def test_anonymous_client_has_no_form(name, client, news):
     url = reverse(name, args=(news.id,))
     response = client.get(url)
     assert 'form' not in response.context
@@ -64,7 +64,7 @@ def test_anonymous_client_has_no_form(client, name, news):
         ('news:detail'),
     )
 )
-def test_authorized_client_has_form(author_client, name, news):
+def test_authorized_client_has_form(name, author_client, news):
     url = reverse(name, args=(news.id,))
     response = author_client.get(url)
     assert 'form' in response.context
