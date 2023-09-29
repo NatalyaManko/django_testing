@@ -28,6 +28,7 @@ def test_pages_availability_for_anonymous_user(client, name, args):
     (
         ('news:edit', pytest.lazy_fixture('pk_for_args_comment')),
         ('news:delete', pytest.lazy_fixture('pk_for_args_comment')),
+
     )
 )
 def test_redirects_anonymous(client, name, args):
@@ -56,8 +57,8 @@ def test_comment_edit_delete_pages_for_users(
     parametrize_client,
     expected_status,
     name,
-    comment
+    pk_for_args_comment
 ):
-    url = reverse(name, args=(comment.id,))
+    url = reverse(name, args=pk_for_args_comment)
     response = parametrize_client.get(url)
     assert response.status_code == expected_status

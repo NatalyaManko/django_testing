@@ -53,17 +53,12 @@ def test_author_can_edit_comment(
     author_client,
     news,
     comment,
+    edit_url,
+    detail_url,
     form_data
 ):
-    url = reverse('news:edit', args=(comment.id,))
-    response = author_client.post(url, form_data)
-    assertRedirects(
-        response,
-        reverse(
-            'news:detail',
-            args=(news.id,)
-        ) + '#comments'
-    )
+    response = author_client.post(edit_url, form_data)
+    assertRedirects(response, (detail_url + '#comments'))
     comment.refresh_from_db()
     assert comment.text == form_data['text']
     assert comment.author == author

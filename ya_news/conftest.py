@@ -10,6 +10,12 @@ from django.utils import timezone
 from news.models import Comment, News
 
 
+URL_DETAIL = ('news:detail')
+URL_EDIT = ('news:edit')
+URL_DELETE = ('news:delete')
+URL_HOME = ('news:home')
+
+
 @pytest.fixture
 def author(django_user_model):
     return django_user_model.objects.create(username='Автор')
@@ -79,22 +85,25 @@ def pk_for_args_news(news):
 
 
 @pytest.fixture
+def form_data():
+    return {'text': 'Новый текст'}
+
+
+@pytest.fixture
+def home_url():
+    return reverse(URL_HOME)
+
+
+@pytest.fixture
 def detail_url(pk_for_args_news):
-    return reverse('news:detail', args=(pk_for_args_news))
+    return reverse(URL_DETAIL, args=(pk_for_args_news))
 
 
 @pytest.fixture
 def edit_url(pk_for_args_comment):
-    return reverse('news:edit', args=(pk_for_args_comment))
+    return reverse(URL_EDIT, args=(pk_for_args_comment))
 
 
 @pytest.fixture
 def delete_url(pk_for_args_comment):
-    return reverse('news:delete', args=(pk_for_args_comment))
-
-
-@pytest.fixture
-def form_data():
-    return {
-        'text': 'Новый текст',
-    }
+    return reverse(URL_DELETE, args=(pk_for_args_comment))
