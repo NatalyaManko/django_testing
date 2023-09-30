@@ -1,14 +1,11 @@
-# conftest.py
 from datetime import datetime as dt
 from datetime import timedelta
-from django.urls import reverse
 
 import pytest
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
-
 from news.models import Comment, News
-
 
 URL_DETAIL = ('news:detail')
 URL_EDIT = ('news:edit')
@@ -66,12 +63,13 @@ def comment(news, author):
 def many_comment(news, author):
     today = timezone.now()
     for index in range(2):
-        Comment.objects.create(
+        comment = Comment.objects.create(
             news=news,
             text=f'Просто текст. {index}',
             author=author
         )
-        Comment.created = today + timedelta(days=index)
+        comment.created = today + timedelta(days=index)
+        comment.save()
 
 
 @pytest.fixture

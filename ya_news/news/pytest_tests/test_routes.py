@@ -24,18 +24,16 @@ def test_pages_availability_for_anonymous_user(client, name, args):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'name, args',
+    'name',
     (
-        ('news:edit', pytest.lazy_fixture('pk_for_args_comment')),
-        ('news:delete', pytest.lazy_fixture('pk_for_args_comment')),
-
+        (pytest.lazy_fixture('edit_url')),
+        (pytest.lazy_fixture('delete_url')),
     )
 )
-def test_redirects_anonymous(client, name, args):
+def test_redirects_anonymous(client, name):
     login_url = reverse('users:login')
-    url = reverse(name, args=args)
-    expected_url = f'{login_url}?next={url}'
-    response = client.get(url)
+    expected_url = f'{login_url}?next={name}'
+    response = client.get(name)
     assertRedirects(response, expected_url)
 
 
@@ -47,18 +45,16 @@ def test_redirects_anonymous(client, name, args):
     )
 )
 @pytest.mark.parametrize(
-    'name',
+    'name_url',
     (
-        ('news:edit'),
-        ('news:delete'),
+        (pytest.lazy_fixture('edit_url')),
+        (pytest.lazy_fixture('delete_url')),
     )
 )
 def test_comment_edit_delete_pages_for_users(
     parametrize_client,
     expected_status,
-    name,
-    pk_for_args_comment
+    name_url
 ):
-    url = reverse(name, args=pk_for_args_comment)
-    response = parametrize_client.get(url)
+    response = parametrize_client.get(name_url)
     assert response.status_code == expected_status

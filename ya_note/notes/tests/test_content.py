@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-
 from notes.forms import NoteForm
 from notes.models import Note
 
@@ -33,12 +32,6 @@ class TestListPage(TestCase):
             'text': cls.NOTE_TEXT,
         }
 
-    def test_notes_in_list_for_author(self):
-        response = self.author_client.get(self.list_url)
-        notes_list = response.context['object_list']
-        note_object = notes_list[0]
-        self.assertIn(note_object, notes_list)
-
     def test_notes_list_for_different_users(self):
         users_notes = (
             (self.author_client, True),
@@ -59,5 +52,5 @@ class TestListPage(TestCase):
             with self.subTest(path=path):
                 response = self.author_client.get(reverse(path, args=args))
                 form = response.context.get('form')
-                self.assertIsInstance(form, NoteForm)
                 self.assertIn('form', response.context)
+                self.assertIsInstance(form, NoteForm)

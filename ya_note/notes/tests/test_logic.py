@@ -3,10 +3,9 @@ from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-from pytils.translit import slugify
-
 from notes.forms import WARNING
 from notes.models import Note
+from pytils.translit import slugify
 
 User = get_user_model()
 
@@ -15,6 +14,7 @@ class TestNoteCreation(TestCase):
 
     NOTE_TEXT = 'Текст комментария'
     NOTE_TITLE = 'Ням Хрю'
+    NOTE_SLUG = 'zaraza22'
 
     @classmethod
     def setUpTestData(cls):
@@ -28,7 +28,7 @@ class TestNoteCreation(TestCase):
         cls.form_data = {
             'title': cls.NOTE_TITLE,
             'text': cls.NOTE_TEXT,
-            'slug': 'zaraza22'
+            'slug': cls.NOTE_SLUG
         }
 
     def test_anonymous_user_cant_create_note(self):
@@ -45,7 +45,7 @@ class TestNoteCreation(TestCase):
         self.assertEqual(note.text, self.NOTE_TEXT)
         self.assertEqual(note.title, self.NOTE_TITLE)
         self.assertEqual(note.author, self.user)
-        self.assertEqual(note.slug, 'zaraza22')
+        self.assertEqual(note.slug, self.NOTE_SLUG)
 
     def test_unique_slug(self):
         self.auth_client.post(self.url, data=self.form_data)
