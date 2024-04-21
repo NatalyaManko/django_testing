@@ -1,5 +1,13 @@
 # Django testing  
 ## Тесты на unittest для проекта YaNote
+
+#### Технологии и инструменты:
+```
+- Python
+- Django
+- Unittest
+- Pytest
+```
 #### В файле test_routes.py:
 ```
 Главная страница доступна анонимному пользователю.
